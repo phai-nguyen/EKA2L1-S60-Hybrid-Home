@@ -149,3 +149,22 @@ Không bulk-port các patch cũ sang upstream.
 ## Scope
 
 Dự án chỉ phục vụ emulator compatibility, Symbian preservation và UI reconstruction. Không nhằm tấn công mạng, xâm nhập hệ thống, malware, credential theft, persistence trái phép hoặc bypass bảo mật ngoài phạm vi emulator.
+
+
+## ESign / Files picker identity constraint
+
+Thiết bị đã xác nhận một ràng buộc riêng của bản sideload bằng ESign:
+
+- picker của iOS có thể mở bình thường nhưng không trả lại URL ROM/RPKG dùng được nếu bundle identity không khớp provisioning identity;
+- bản device-tested có `CFBundleIdentifier = app.lavender1865.valley8348`;
+- A/B trước đây trên cùng thiết bị/certificate cho thấy bản giữ `com.eka2l1.emulator` không chọn ROM thành công, còn bản đổi sang `app.lavender1865.valley8348` thì chọn được;
+- provisioning application identifier đã quan sát: `3V48279JP4.app.lavender1865.valley8348`.
+
+Vì vậy các build Hybrid Home dành cho thiết bị hiện tại phải giữ đồng thời:
+
+```text
+EKA2L1_IOS_DYNARMIC=OFF
+CFBundleIdentifier=app.lavender1865.valley8348
+```
+
+Đây là packaging/signing compatibility constraint; không cần thay thế implementation của SwiftUI Files picker trong upstream khi identity khớp.
