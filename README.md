@@ -220,24 +220,29 @@ Mục tiêu là bắt đầu từ guest environment đã ổn định, đặc bi
 
 ## 10. Scope / Safety clarification
 
-Dự án này chỉ phục vụ:
+**Dự án này không nhằm mục đích tấn công mạng, xâm nhập hệ thống hoặc vượt qua cơ chế bảo mật của thiết bị hay dịch vụ bên ngoài.**
+
+Mục tiêu của dự án chỉ giới hạn trong:
 
 - giả lập và bảo tồn phần mềm Symbian;
 - nghiên cứu khả năng tương thích EKA2L1;
 - tái tạo giao diện Nokia/S60;
-- chạy firmware và ứng dụng trên emulator.
+- chạy firmware và ứng dụng Symbian trong môi trường emulator;
+- nghiên cứu kiến trúc hệ điều hành cũ phục vụ mục đích tương thích, kiểm thử và bảo tồn phần mềm.
 
-Dự án **không liên quan đến**:
+Dự án **không được thiết kế hoặc sử dụng cho**:
 
-- khai thác hệ thống;
-- xâm nhập thiết bị;
+- tấn công mạng;
+- khai thác hệ thống bên ngoài phạm vi emulator;
+- xâm nhập thiết bị hoặc tài khoản;
 - malware;
-- đánh cắp credential;
-- persistence;
+- đánh cắp credential hoặc dữ liệu người dùng;
+- persistence trái phép;
 - bypass bảo mật;
-- tấn công mạng.
+- chiếm quyền điều khiển hệ thống;
+- gây gián đoạn dịch vụ hoặc phá hoại dữ liệu.
 
-Mọi patch trong repo phải phục vụ trực tiếp cho emulator compatibility, UI reconstruction hoặc preservation.
+Mọi patch, thử nghiệm và công cụ trong repo phải phục vụ trực tiếp cho **emulator compatibility, UI reconstruction, software preservation hoặc reverse engineering hợp pháp trong phạm vi firmware/emulator của dự án**.
 
 ## 11. Nguồn liên quan
 
