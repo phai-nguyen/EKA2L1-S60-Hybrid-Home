@@ -70,3 +70,27 @@ Nếu device test PASS, bắt đầu HYBRIDHOME2:
 - Telephone / Contacts / Messaging shortcuts;
 - layout 360×640;
 - bắt đầu chuyển dữ liệu UI từ hardcode sang resource/firmware-driven.
+
+
+## Device test update — 2026-09-30: VPL installer PASS
+
+The iOS VPL firmware path is now device-tested after fixing the Swift concurrency crash in the multi-file importer.
+
+Tested on the user's iPhone with the fixed build from GitHub Actions run `#36661834297` (HEAD `62bf761c44fb52111206e19a2d1a4a1b3fbb6fa7`).
+
+Observed device flow:
+- choose **Firmware VPL**;
+- choose multiple RM-612 firmware files together (8 files selected in the recording);
+- install proceeds instead of crashing;
+- a Nokia C6-00 / RM-612 device appears in the device switcher;
+- switching to C6-00 shows its real firmware application list/icons through upstream AppList/AppArc.
+
+Crash root cause from the preceding failed build:
+- `ImportDeviceView.findVPL(in:)` and the staging helper inherited Swift main-actor isolation from the SwiftUI view;
+- they were invoked from a background queue during firmware import, triggering `dispatch_assert_queue_fail` / `SIGTRAP`;
+- both helpers are now `nonisolated`, and CI checks this contract.
+
+Status:
+- **VPL multi-file import: DEVICE PASS**
+- **VPL no-crash fix: DEVICE PASS**
+- **HYBRIDHOME2 remains scoped to RM-356 only**; non-RM-356 devices such as the installed C6-00 continue to use the normal upstream app-grid surface.
