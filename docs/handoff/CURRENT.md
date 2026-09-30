@@ -1,96 +1,48 @@
-# CURRENT — HYBRIDHOME1
+# CURRENT — N-GAGE QD MACHINE1 PREP
 
-**Ngày:** 2026-09-29
+**Ngày:** 2026-09-30
+**Handoff chuẩn:** `docs/handoff/NEWCHAT-NGAGE-QD-MACHINE1-2026-09-30.md`
 
-## Trạng thái
+## Trạng thái hiện tại
 
-HYBRIDHOME1 đã build GREEN và đang chờ device test.
+### Product branch
+- repo: `phai-nguyen/-EKA2L1-iOS-fixed`
+- branch: `hybridhome-upstream1`
+- HYBRIDHOME3 commit: `acb2775a652f44104c841a6ed08557801a3aadbe`
+- build: `#36663115510` — **GREEN**
+- VPL multi-file import: **DEVICE PASS**
+- VPL no-crash fix: **DEVICE PASS**
+- Vietnamese UI: working
+- JIT/Dynarmic: OFF for ESign
+- Bundle ID: `app.lavender1865.valley8348`
 
-### Build
+### New research direction
+- full-machine target: **Nokia N-Gage QD RH-29**
+- reason: simpler S60v1/EKA1 target than RM-356
+- architecture inspiration: CloudpilotEmu hardware-oriented machine model
+- keep Hybrid Home as product branch; machine work is separate research branch
 
-- Run: `36600699450`
-- Build host HEAD: `7325f43f9ef6f9079f20636ec2991138ac84ad06`
-- Source prototype HEAD: `83e1326dd25bedec0b8d6d20435484b0ee965b2a`
-- Artifact: `EKA2L1-HYBRIDHOME1-OLDOS-SHELL-IPA`
-- Artifact ID: `11048733884`
-- IPA SHA-256: `101b3bdbd1d9d56e71126e053d03d720beed11f58afcb3481ae957ba564ad23f`
-
-## Architecture under test
-
-```text
-Menu3 real
-→ host-rendered Hybrid Home
-→ bridge::get_apps()
-→ existing EKA2L1 launcher
-→ real Symbian app
-```
-
-Real Nokia Home UID `0x102750F0` is not required for this test.
-
-## Device test
-
-1. Vào Menu3.
-2. Mở Menu trò chơi.
-3. Chọn **Hybrid Home (thử nghiệm)**.
-4. Xác nhận Hybrid Home hiển thị.
-5. Chọn **Trở về Menu3 thật**.
-6. Mở Hybrid Home lần nữa.
-7. Chọn **Ứng dụng Symbian thật**.
-8. Chọn một ứng dụng.
-9. Xác nhận ứng dụng guest thật chạy.
-
-## PASS
-
-```text
-Menu3 real
-→ Hybrid Home
-→ Menu3 real
-→ Hybrid Home
-→ real app list
-→ real Symbian app
-```
-
-## Log markers
-
-```text
-[HYBRIDHOME1][TRIGGER]
-[HYBRIDHOME1][SHOW]
-[HYBRIDHOME1][RETURN_MENU3]
-[HYBRIDHOME1][APP_CHOOSER]
-[HYBRIDHOME1][LAUNCH_REAL_APP]
-```
+### RH-29 ROM
+- source upload: `Nokia_N-Gage_QD_RH-29.zip`
+- generated: `SYM.ROM`
+- firmware: **V 04.10 — 09-09-2004**
+- ROM base: `0x50000000`
+- ROM size: `18,284,544`
+- MD5: `ba9ae3d584c42b24d44bf0f25ba5896f`
+- SHA-256: `4824ee55086cade3415c7478ec54b9654658bfdd737e779995dfe0ef716ab70b`
+- **NOT DEVICE-TESTED YET**
 
 ## Next
 
-Nếu device test PASS, bắt đầu HYBRIDHOME2:
+1. Test generated RH-29 `SYM.ROM` in current EKA2L1 iOS.
+2. If loader/device/AppList works, create research branch `ngage-machine1`.
+3. MACHINE1 first probe:
+   - ARM920T-class execution;
+   - ROM map;
+   - RAM;
+   - reset/restart vector;
+   - unknown MMIO read/write trace.
+4. Do not attempt LCD/Home until early boot execution is understood.
 
-- app icons thật;
-- wallpaper Nokia 5800;
-- S60-style status bar;
-- Telephone / Contacts / Messaging shortcuts;
-- layout 360×640;
-- bắt đầu chuyển dữ liệu UI từ hardcode sang resource/firmware-driven.
-
-
-## Device test update — 2026-09-30: VPL installer PASS
-
-The iOS VPL firmware path is now device-tested after fixing the Swift concurrency crash in the multi-file importer.
-
-Tested on the user's iPhone with the fixed build from GitHub Actions run `#36661834297` (HEAD `62bf761c44fb52111206e19a2d1a4a1b3fbb6fa7`).
-
-Observed device flow:
-- choose **Firmware VPL**;
-- choose multiple RM-612 firmware files together (8 files selected in the recording);
-- install proceeds instead of crashing;
-- a Nokia C6-00 / RM-612 device appears in the device switcher;
-- switching to C6-00 shows its real firmware application list/icons through upstream AppList/AppArc.
-
-Crash root cause from the preceding failed build:
-- `ImportDeviceView.findVPL(in:)` and the staging helper inherited Swift main-actor isolation from the SwiftUI view;
-- they were invoked from a background queue during firmware import, triggering `dispatch_assert_queue_fail` / `SIGTRAP`;
-- both helpers are now `nonisolated`, and CI checks this contract.
-
-Status:
-- **VPL multi-file import: DEVICE PASS**
-- **VPL no-crash fix: DEVICE PASS**
-- **HYBRIDHOME2 remains scoped to RM-356 only**; non-RM-356 devices such as the installed C6-00 continue to use the normal upstream app-grid surface.
+See the full handoff before doing any work:
+`docs/handoff/NEWCHAT-NGAGE-QD-MACHINE1-2026-09-30.md`
